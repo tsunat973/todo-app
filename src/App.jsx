@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const [text, setText] = useState("");
@@ -52,6 +52,11 @@ function App() {
       />
       <button onClick={addTodo}>追加</button>
       <p>入力中： {text}</p>
+      <p>
+        残り:
+        {todos.filter((todo) => !todo.completed).length}
+        件
+      </p>
       {todos.map((todo, index) => (
         <div key={index}>
           <p style={{
