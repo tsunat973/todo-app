@@ -2,7 +2,20 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [text, setText] = useState("");
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const savedTodos = 
+    localStorage.getItem("todos");
+
+    return savedTodos
+    ? JSON.parse(savedTodos)
+    : [];
+  });
+  useEffect(() => {
+    localStorage.setItem(
+      "todos",
+      JSON.stringify(todos)
+    );
+  }, [todos]);
   const addTodo = () => {
     const newText = text.trim();
 
