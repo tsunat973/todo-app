@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 function App() {
   const [text, setText] = useState("");
   const [todos, setTodos] = useState(() => {
-    const savedTodos = 
-    localStorage.getItem("todos");
+    const savedTodos =
+      localStorage.getItem("todos");
 
     return savedTodos
-    ? JSON.parse(savedTodos)
-    : [];
+      ? JSON.parse(savedTodos)
+      : [];
   });
+  const [editingIndex, setEditingIndex] = useState(null);
+
+  const [editText, setEditText] = useState("");
   useEffect(() => {
     localStorage.setItem(
       "todos",
@@ -48,6 +51,24 @@ function App() {
     );
   };
 
+  //編集保存
+  const saveTodo = (index) => {
+    setTodos(
+      todos.map((todo, i) => {
+        if ( i === index) {
+          return {
+            ...todo,
+            text: editText,
+          };
+        }
+        return todo;
+      })
+    );
+
+    setEditingIndex(null);
+    setEditText("");
+  }
+
   return (
     <>
       <h1> Todoアプリ</h1>
@@ -72,15 +93,31 @@ function App() {
       </p>
       {todos.map((todo, index) => (
         <div key={index}>
-          <p style={{
-            textDecoration: todo.completed ? "line-through" : "none",
-          }}>{todo.text}</p>
+          {editingIndex === index ? (
+            <>
+              <input value={editText}
+                onChange={(e) => setEditText(e.target.value)} />
+
+              <button  onClick={() => saveTodo(index)}>保存</button>
+            </>) : (
+            <p style={{
+              textDecoration: todo.completed ? "line-through" : "none",
+            }}>{todo.text}</p>
+          )}
+
           {/* クリックされたときに deleteTodo(index) を実行する関数を渡している */}
           <button onClick={() => deleteTodo(index)}>
             削除
           </button>
           <button onClick={() => toggleTodo(index)}>完了</button>
+          <button onClick={() => {
+            setEditingIndex(index);
+            setEditText(todo.text);
+          }}>
+            編集
+          </button>
         </div>
+
 
       ))}
     </>
