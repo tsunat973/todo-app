@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [text, setText] = useState("");
@@ -55,7 +56,7 @@ function App() {
   const saveTodo = (index) => {
     setTodos(
       todos.map((todo, i) => {
-        if ( i === index) {
+        if (i === index) {
           return {
             ...todo,
             text: editText,
@@ -70,21 +71,24 @@ function App() {
   }
 
   return (
-    <>
+    <div className="container">
       <h1> Todoアプリ</h1>
       {/* Enterキーでも追加できるように */}
-      <input
-        // Reactでは通常、valueを指定してStateで入力欄を管理します。
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            addTodo();
-          }
-        }}
-      />
-      <button onClick={addTodo}>追加</button>
+      <div className="input-area">
+        <input
+          // Reactでは通常、valueを指定してStateで入力欄を管理します。
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              addTodo();
+            }
+          }}
+        />
+        <button onClick={addTodo}>追加</button>
+      </div>
+
       <p>入力中： {text}</p>
       <p>
         残り:
@@ -92,17 +96,22 @@ function App() {
         件
       </p>
       {todos.map((todo, index) => (
-        <div key={index}>
+        <div 
+        key={index}
+        className="todo-item">
           {editingIndex === index ? (
             <>
               <input value={editText}
                 onChange={(e) => setEditText(e.target.value)} />
 
-              <button  onClick={() => saveTodo(index)}>保存</button>
+              <button onClick={() => saveTodo(index)}>保存</button>
             </>) : (
-            <p style={{
-              textDecoration: todo.completed ? "line-through" : "none",
-            }}>{todo.text}</p>
+            <p 
+            className={ todo.completed 
+              ? "todo-text completed"
+              : "todo-text"
+            } 
+            >{todo.text}</p>
           )}
 
           {/* クリックされたときに deleteTodo(index) を実行する関数を渡している */}
@@ -120,7 +129,10 @@ function App() {
 
 
       ))}
-    </>
+    </div>
+
+
+
   );
 }
 
