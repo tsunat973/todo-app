@@ -7,11 +7,14 @@
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 .todo-item {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   margin-bottom: 10px;
 
@@ -23,9 +26,30 @@
 }
 
 .todo-text {
-  width: 200px;
+  width: 150px;
 }
 
 button {
   cursor: pointer;
+}
+
+.filter-area {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+padding: 6px 12px;
+border: 1px solid #ccc;
+border-radius: 6px;
+background: white;
+color: black;
+}
+
+.filter-btn.active{
+  background: #333;
+  color: white;
+  border-color: #333;
 }

@@ -69,6 +69,8 @@ function App() {
     setEditingIndex(null);
     setEditText("");
   }
+  //filter機能実装
+  const [display, setDisplay] = useState("all");
 
   return (
     <div className="container">
@@ -95,40 +97,62 @@ function App() {
         {todos.filter((todo) => !todo.completed).length}
         件
       </p>
-      {todos.map((todo, index) => (
-        <div 
-        key={index}
-        className="todo-item">
-          {editingIndex === index ? (
-            <>
-              <input value={editText}
-                onChange={(e) => setEditText(e.target.value)} />
+      <div className="filter-area">
+        <button
+          className={display === "all" ? "filter-btn active" : "filter-btn"}
+          onClick={() => setDisplay("all")}
+        >全部</button>
+        <button className={display === "active" ? "filter-btn active" : "filter-btn"}
+          onClick={() => setDisplay("active")}>未完了</button>
+        <button className={display === "completed" ? "filter-btn active" : "filter-btn"}
+          onClick={() => setDisplay("completed")}>完了済み</button>
+      </div>
 
-              <button onClick={() => saveTodo(index)}>保存</button>
-            </>) : (
-            <p 
-            className={ todo.completed 
-              ? "todo-text completed"
-              : "todo-text"
-            } 
-            >{todo.text}</p>
-          )}
+      {todos
+        .filter((todo) =>
+          display === "all"
+            ? true
+            : display === "active"
+              ? !todo.completed
+              : display === "completed"
+                ? todo.completed
+                : false
+        )
+        .map((todo, index) => (
+          <div
+            key={index}
+            className="todo-item">
+            {editingIndex === index ? (
+              <>
+                <input value={editText}
+                  onChange={(e) => setEditText(e.target.value)} />
 
-          {/* クリックされたときに deleteTodo(index) を実行する関数を渡している */}
-          <button onClick={() => deleteTodo(index)}>
-            削除
-          </button>
-          <button onClick={() => toggleTodo(index)}>完了</button>
-          <button onClick={() => {
-            setEditingIndex(index);
-            setEditText(todo.text);
-          }}>
-            編集
-          </button>
-        </div>
+                <button onClick={() => saveTodo(index)}>保存</button>
+              </>) : (
+              <p
+                className={todo.completed
+                  ? "todo-text completed"
+                  : "todo-text"
+                }
+              >{todo.text}</p>
+            )}
 
 
-      ))}
+            {/* クリックされたときに deleteTodo(index) を実行する関数を渡している */}
+            <button onClick={() => deleteTodo(index)}>
+              削除
+            </button>
+            <button onClick={() => toggleTodo(index)}>完了</button>
+            <button onClick={() => {
+              setEditingIndex(index);
+              setEditText(todo.text);
+            }}>
+              編集
+            </button>
+          </div>
+
+
+        ))}
     </div>
 
 
