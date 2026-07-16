@@ -108,6 +108,8 @@ function App() {
           onClick={() => setDisplay("completed")}>完了済み</button>
       </div>
 
+      {todos.length === 0 && <p>まだTodoがありません</p>}
+
       {todos
         .filter((todo) =>
           display === "all"

@@ -42,14 +42,24 @@ button {
 
 .filter-btn {
 padding: 6px 12px;
-border: 1px solid #ccc;
+border: 1px solid #555;
 border-radius: 6px;
-background: white;
-color: black;
+background: #2a2a2a;
+color: #ddd;
 }
 
 .filter-btn.active{
-  background: #333;
+  background: #555;
   color: white;
-  border-color: #333;
+  border-color: #888;
+}
+
+@media (max-width: 600px) {
+  .container {
+    width: 90%;
+  }
+
+  .todo-item {
+    flex-wrap: wrap;
+  }
 }
