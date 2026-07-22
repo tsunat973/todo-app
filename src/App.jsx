@@ -3,72 +3,69 @@ import "./App.css";
 
 function App() {
   const [text, setText] = useState("");
-  const [todos, setTodos] = useState(() => {
-    const savedTodos =
-      localStorage.getItem("todos");
-
-    return savedTodos
-      ? JSON.parse(savedTodos)
-      : [];
-  });
+  const [todos, setTodos] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
 
   const [editText, setEditText] = useState("");
   useEffect(() => {
-    localStorage.setItem(
-      "todos",
-      JSON.stringify(todos)
-    );
-  }, [todos]);
+    fetch("http://localhost:3001/todos")
+      .then((res) => res.json())
+      .then((data) => setTodos(data));
+  }, []);
+
   const addTodo = () => {
     const newText = text.trim();
 
     if (newText === "") return;
-    setTodos([...todos, {
-      text: newText,
-      completed: false,
-    },
-    ]);
+
+    fetch("http://localhost:3001/todos", {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({ text: newText }),
+    })
+      .then((res) => res.json())
+      .then((data) => setTodos(data));
     setText("");
   };
   const deleteTodo = (index) => {
-    setTodos(todos.filter((todo, i) => i !== index));
+    fetch(`http://localhost:3001/todos/${index}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => setTodos(data));
   };
 
   //   i → 今見ているTodoの番号
   // index → クリックされたTodoの番号
   const toggleTodo = (index) => {
-    setTodos(
-      todos.map((todo, i) => {
-        if (i === index) {
-          return {
-            ...todo,
-            completed: !todo.completed,
-          };
-        }
+    const target = todos[index]; //対象のTodoを取得 
 
-        return todo;
-      })
-    );
+    fetch(`http://localhost:3001/todos/${index}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ completed: !target.completed }),
+    })
+      .then((res) => res.json())
+      .then((data) => setTodos(data));
   };
 
   //編集保存
   const saveTodo = (index) => {
-    setTodos(
-      todos.map((todo, i) => {
-        if (i === index) {
-          return {
-            ...todo,
-            text: editText,
-          };
-        }
-        return todo;
-      })
-    );
-
+    fetch(`http://localhost:3001/todos/${index}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: editText }),
+    })
+      .then((res) => res.json())
+      .then((data) => setTodos(data));
     setEditingIndex(null);
     setEditText("");
-  }
+
+  };
+
+
+
+
   //filter機能実装
   const [display, setDisplay] = useState("all");
 
@@ -131,29 +128,27 @@ function App() {
 
                 <button onClick={() => saveTodo(index)}>保存</button>
               </>) : (
-              <p
-                className={todo.completed
-                  ? "todo-text completed"
-                  : "todo-text"
-                }
-              >{todo.text}</p>
+              <>
+                <p
+                  className={todo.completed
+                    ? "todo-text completed"
+                    : "todo-text"
+                  }
+                >{todo.text}</p>
+                <button onClick={() => deleteTodo(index)}>
+                  削除
+                </button>
+                <button onClick={() => toggleTodo(index)}>完了</button>
+                <button onClick={() => {
+                  setEditingIndex(index);
+                  setEditText(todo.text);
+                }}>
+                  編集
+                </button>
+              </>
+
             )}
-
-
-            {/* クリックされたときに deleteTodo(index) を実行する関数を渡している */}
-            <button onClick={() => deleteTodo(index)}>
-              削除
-            </button>
-            <button onClick={() => toggleTodo(index)}>完了</button>
-            <button onClick={() => {
-              setEditingIndex(index);
-              setEditText(todo.text);
-            }}>
-              編集
-            </button>
           </div>
-
-
         ))}
     </div>
 
