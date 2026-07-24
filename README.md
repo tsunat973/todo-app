@@ -1,16 +1,49 @@
-# React + Vite
+# Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + Node.js/Express + SQLiteで作ったフルスタックTodoアプリです。
+CRUD操作(作成・読み取り・更新・削除)を実際に手を動かしながら学ぶために制作しました。
 
-Currently, two official plugins are available:
+## デモ
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+🔗 https://todo-app-three-lime-52.vercel.app
 
-## React Compiler
+## 使用技術
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**フロントエンド**
+- React (useState, useEffect)
+- Vite
+- Vercel(デプロイ)
 
-## Expanding the Oxlint configuration
+**バックエンド**
+- Node.js / Express
+- SQLite(`node:sqlite`)
+- Render(デプロイ)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## 主な機能
+
+- Todoの追加・削除・完了/未完了の切り替え・編集(CRUD)
+- フィルター機能(全部 / 未完了 / 完了済み)
+- レスポンシブ対応
+- SQLiteによるデータの永続化
+
+## こだわった点
+
+- `useState`でUIの状態(入力中のテキスト、編集中のTodo、フィルターの状態など)を管理し、Reactの状態管理の基本を実践的に学びながら実装しました
+- フロントエンド(React)とバックエンド(Express)を分離し、CRUD操作をREST API経由で行う設計にしました
+- 開発中はlocalStorageでの管理から始め、Express + SQLiteでのデータ永続化に段階的に移行しました
+
+## ローカルでの動かし方
+
+\`\`\`bash
+git clone https://github.com/tsunat973/todo-app.git
+cd todo-app
+npm install
+
+# .envファイルを作成
+echo "VITE_API_URL=http://localhost:3001" > .env
+
+npm run dev
+\`\`\`
+
+※ ローカルでAPIも動かす場合は [todo-server](https://github.com/tsunat973/todo-server) を別途起動してください。
+デモページ(Vercel)はRender上の本番バックエンドに接続しているため、ローカルでバックエンドを起動しなくても動作します。
