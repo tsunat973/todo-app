@@ -8,7 +8,7 @@ function App() {
 
   const [editText, setEditText] = useState("");
   useEffect(() => {
-    fetch("http://localhost:3001/todos")
+    fetch(`${import.meta.env.VITE_API_URL}/todos`)
       .then((res) => res.json())
       .then((data) => setTodos(data));
   }, []);
@@ -18,7 +18,7 @@ function App() {
 
     if (newText === "") return;
 
-    fetch("http://localhost:3001/todos", {
+    fetch(`${import.meta.env.VITE_API_URL}/todos`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({ text: newText }),
@@ -27,8 +27,8 @@ function App() {
       .then((data) => setTodos(data));
     setText("");
   };
-  const deleteTodo = (index) => {
-    fetch(`http://localhost:3001/todos/${index}`, {
+  const deleteTodo = (id) => {
+    fetch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
@@ -37,10 +37,10 @@ function App() {
 
   //   i → 今見ているTodoの番号
   // index → クリックされたTodoの番号
-  const toggleTodo = (index) => {
-    const target = todos[index]; //対象のTodoを取得 
+  const toggleTodo = (id) => {
+    const target = todos.find((todo) => todo.id === id); //対象のTodoを取得 
 
-    fetch(`http://localhost:3001/todos/${index}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ completed: !target.completed }),
@@ -50,8 +50,8 @@ function App() {
   };
 
   //編集保存
-  const saveTodo = (index) => {
-    fetch(`http://localhost:3001/todos/${index}`, {
+  const saveTodo = (id) => {
+    fetch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: editText }),
@@ -126,7 +126,7 @@ function App() {
                 <input value={editText}
                   onChange={(e) => setEditText(e.target.value)} />
 
-                <button onClick={() => saveTodo(index)}>保存</button>
+                <button onClick={() => saveTodo(todo.id)}>保存</button>
               </>) : (
               <>
                 <p
@@ -135,16 +135,19 @@ function App() {
                     : "todo-text"
                   }
                 >{todo.text}</p>
-                <button onClick={() => deleteTodo(index)}>
-                  削除
-                </button>
-                <button onClick={() => toggleTodo(index)}>完了</button>
-                <button onClick={() => {
-                  setEditingIndex(index);
-                  setEditText(todo.text);
-                }}>
-                  編集
-                </button>
+                <div>
+                  <button onClick={() => deleteTodo(todo.id)}>
+                    削除
+                  </button>
+                  <button onClick={() => toggleTodo(todo.id)}>完了</button>
+                  <button onClick={() => {
+                    setEditingIndex(index);
+                    setEditText(todo.text);
+                  }}>
+                    編集
+                  </button>
+                </div>
+
               </>
 
             )}
